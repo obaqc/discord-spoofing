@@ -1,4 +1,4 @@
-![Discord Platform Spoofer](./image.png)
+![Discord Platform Spoofer](./images/image.png)
 # Discord Platform Spoofer
 
 Spoof multiple Discord platform sessions simultaneously using `discord.js-selfbot-v13`.
@@ -6,11 +6,12 @@ Spoof multiple Discord platform sessions simultaneously using `discord.js-selfbo
 ## Features
 
 * Spoof as:
-
   * Discord VR (Meta Quest 3)
   * Discord Embedded (PS5)
   * Discord Android
   * Discord Client (Desktop)
+  * Discord (Web)
+
 * Custom User-Agent for each session
 * Automatic login to all configured platforms
 * Simple configuration file
@@ -18,22 +19,24 @@ Spoof multiple Discord platform sessions simultaneously using `discord.js-selfbo
 ## Installation
 
 ```bash
-npm install discord.js-selfbot-v13
+npm install discord.js-selfbot-v13 fs
 ```
 
 ## Configuration
 
-Create a `config.json` file:
+A simple `config.json` file:
 
 ```json
 {
-    "token": "",
-    "devices": {
-        "Discord VR": "Meta Quest 3",
-        "Discord Embedded": "PS5",
-        "Discord Android": "sdk_gphone64_x86_64, sdk_gphone64_x86_64",
-        "Discord Client": "Desktop"
-    }
+  "token": "your-token",
+  "forceOnlineMode": true,
+  "devices": {
+    "Discord VR": { "name": "Meta Quest 3", "spoof": true },
+    "Discord Embedded": { "name": "PS5", "spoof": true },
+    "Discord Android": { "name": "sdk_gphone64_x86_64, sdk_gphone64_x86_64", "spoof": true },
+    "Discord Client": { "name": "Desktop", "spoof": true },
+    "Discord": { "name": "Web", "spoof": true }
+  }
 }
 ```
 
@@ -43,49 +46,25 @@ Replace `token` with your Discord account token.
 
 ```bash
 npm i
+# replace "your-token" with your actual Discord token
+node -e "require('fs').writeFileSync('config.json', JSON.stringify({ ...JSON.parse(require('fs').readFileSync('config.json', 'utf8')), token: 'your-token' }, null, 2))"
 node index.js
 ```
 
 ## Example Output
 
 ```text
-spoofed as Discord VR on Meta Quest 3, for MTAxMjM0NTY3ODkw... Username
-spoofed as Discord Embedded on PS5, for MTAxMjM0NTY3ODkw... Username
-spoofed as Discord Android on sdk_gphone64_x86_64, sdk_gphone64_x86_64, for MTAxMjM0NTY3ODkw... Username
-spoofed as Discord Client on Desktop, for MTAxMjM0NTY3ODkw... Username
+spoofed as Discord Embedded on PS5 | username
+spoofed as Discord Android on sdk_gphone64_x86_64, sdk_gphone64_x86_64 | username
+spoofed as Discord on Web | username
+spoofed as Discord VR on Meta Quest 3 | username
+spoofed as Discord Client on Desktop | username
 ```
 
 ## Source
 
-```js
-const { Client } = require('discord.js-selfbot-v13');
-const config = require('./config');
-
-for (const [browser, device] of Object.entries(config.devices)) {
-    const client = new Client({
-        http: {
-            headers: {
-                'User-Agent': `Discord/${browser} (${device})`,
-                'Accept-Language': 'en-US',
-            },
-        },
-        ws: {
-            properties: {
-                browser: browser,
-                device: device,
-            },
-        },
-    });
-
-    client.on('ready', async () => {
-        console.log(
-            `spoofed as ${browser} on ${device}, for ${config.token.substring(0, 15)}... ${client.user?.username}`
-        );
-    });
-
-    client.login(config.token);
-}
-```
+[index.js](./index.js)
+[config.json](./config.json)
 
 ## Disclaimer
 
