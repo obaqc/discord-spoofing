@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "strict": true,
+    "module": "commonjs",
+    "target": "ES2022",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": ["src/**/*"]
+}

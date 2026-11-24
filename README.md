@@ -1,7 +1,7 @@
 ![Discord Platform Spoofer](./images/image.png)
 # Discord Platform Spoofer
 
-Spoof multiple Discord platform sessions simultaneously using `discord.js-selfbot-v13`.
+Spoof multiple Discord platform sessions simultaneously using raw WebSocket in Node.js (CommonJS).
 
 ## Features
 
@@ -12,23 +12,29 @@ Spoof multiple Discord platform sessions simultaneously using `discord.js-selfbo
   * Discord Client (Desktop)
   * Discord (Web)
 
-* Custom User-Agent for each session
-* Automatic login to all configured platforms
-* Simple configuration file
+* Raw WebSocket gateway — zero dependency on `discord.js` or `discord.js-selfbot-v13`
+* Accurate user Gateway v9 handshake (proper client properties, capabilities, client state, and no invalid bot intents)
+* Multi-token support: runs across multiple accounts simultaneously
+* Automatic session resumption (`RESUME`) on disconnect
+* Heartbeat management with zombie connection detection
+* Connection staggering to prevent gateway rate-limits
 
 ## Installation
 
 ```bash
-npm install discord.js-selfbot-v13 fs
+npm install
 ```
 
 ## Configuration
 
-A simple `config.json` file:
+Edit `src/storage/config.json`:
 
 ```json
 {
-  "token": "your-token",
+  "tokens": [
+    "your-token-1",
+    "your-token-2"
+  ],
   "forceOnlineMode": true,
   "devices": {
     "Discord VR": { "name": "Meta Quest 3", "spoof": true },
@@ -40,15 +46,12 @@ A simple `config.json` file:
 }
 ```
 
-Replace `token` with your Discord account token.
+Replace `tokens` with your Discord account token(s). A single `"token": "..."` string is also accepted for backward compatibility.
 
 ## Usage
 
 ```bash
-npm i
-# replace "your-token" with your actual Discord token
-node -e "require('fs').writeFileSync('config.json', JSON.stringify({ ...JSON.parse(require('fs').readFileSync('config.json', 'utf8')), token: 'your-token' }, null, 2))"
-node index.js
+npm start
 ```
 
 ## Example Output
@@ -61,11 +64,26 @@ spoofed as Discord VR on Meta Quest 3 | username
 spoofed as Discord Client on Desktop | username
 ```
 
-## Source
+## Project Structure
 
-[index.js](./index.js)
-[config.json](./config.json)
+```
+discord-device-spoofing-nodejs/
+├── src/
+│   ├── Classes/
+│   │   └── Gateway.js      # Raw WebSocket connection, IDENTIFY, RESUME, and heartbeat
+│   ├── types/
+│   │   └── index.d.ts      # TypeScript interfaces and type definitions
+│   ├── utils/
+│   │   └── config.js       # Configuration loader and validator
+│   ├── storage/
+│   │   └── config.json     # Account tokens and device configuration
+│   └── index.js            # Application entry point
+│
+├── jsconfig.json
+├── package.json
+└── README.md
+```
 
 ## Disclaimer
 
-This project uses a selfbot library and may violate Discord's Terms of Service. Use at your own risk. Account limitations, restrictions, or bans may occur as a result of using selfbots or modified clients.
+This project connects to Discord's Gateway API. Automating user accounts may violate Discord's Terms of Service. Use at your own risk.

@@ -1,15 +1,19 @@
 {
-  "name": "discord-self",
-  "version": "1.0.0",
-  "description": "",
+  "name": "discord-device-spoofing-nodejs",
+  "version": "2.0.0",
+  "description": "Spoof multiple Discord platform sessions simultaneously using raw WebSocket.",
   "license": "ISC",
-  "author": "obaqz",
+  "author": "obaqc",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index"
+    "start": "node src/index.js"
   },
   "dependencies": {
-    "discord.js-selfbot-v13": "^3.7.1"
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.13",
+    "typescript": "^5.7.3"
   }
 }

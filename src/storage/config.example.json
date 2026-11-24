@@ -1,5 +1,5 @@
 {
-  "token": "your-token",
+  "tokens": [],
   "forceOnlineMode": true,
   "devices": {
     "Discord VR": { "name": "Meta Quest 3", "spoof": true },
